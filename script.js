@@ -44,30 +44,17 @@ function generatePassword() {
      4 WHEN prompted for character types to include in the password
       THEN I choose lowercase, uppercase, numeric, and/or special characters
    */
-   var makePassword = new Array();
-   for (var i = 0; i < criteria.length; i++) {
-      makePassword[i] = confirm(criteria[i]);
-   }
+
+   const hasupper = confirm(criteria[0]);
+   const haslower = confirm(criteria[1]);
+   const hasnumber = confirm(criteria[2]);
+   const hassymbol = confirm(criteria[3]);
 
    /*
     5 WHEN I answer each prompt
      THEN my input should be validated and at least one character type should be 
      selected
   */
-   for (var i = 0; i < makePassword.length; i++) {
-      if (!makePassword[i]) {
-         alert("You must choose at least one character type to generate your password.");
-         break;
-      }
-      else {
-         alert("Generating password.  Click Ok to see the result.")
-         break;
-      }
-   }
-
-   
-   //var newPassword =  
-   securePassword(pwLength, makePassword);
 
 
    const randomFunc = {
@@ -76,27 +63,33 @@ function generatePassword() {
       number: getRandomNumber,
       symbol: getRandomSymbol
    }
-   
-   function securePassword(lgth, contents) {
-      let finalPassword = "";
 
-      const typesCount = makePassword[0] + makePassword[1] + makePassword[2] + makePassword[3];
+   var newPassword = securePassword(pwLength, hasupper, haslower, hasnumber, hassymbol);
 
-      const arrayOfTypes = [makePassword[0], makePassword[1], makePassword[2], makePassword[3]];
-      console.log("Count: = " + typesCount);
-      console.log("Array of types = " + arrayOfTypes);
+   function securePassword(lgth, upper, lower, number, symbol) {
+      let generatedPassword = "";
 
-      // if (typesCnt === 0)
-      //    return "";
-      // else {
-      //    // create a loop
-      //    for (let i = 0; i < length; i += typesCount) {
-      //       typesArr.forEach(type => {
-      //          const funcName = Object.keys(type)[0];
-      //          generatedPassword += randomFunc[funcName]();
-      //       });
-      //    }
-      // }
+      const typesCount = upper + lower + number + symbol;
+      console.log("Upper type: " + typeof (upper))
+      console.log({ upper });
+
+      const arrayOfTypes = [{ upper }, { lower }, { number }, { symbol }].filter(item => Object.values(item)[0]);
+
+
+      if (typesCount === 0)
+         return "";
+      else {
+         // create a loop
+         for (let i = 0; i < lgth; i += typesCount) {
+            arrayOfTypes.forEach(type => {
+               const funcName = Object.keys(type)[0];
+               generatedPassword += randomFunc[funcName]();
+            });
+         }
+      }
+      const finalPassword = generatedPassword.slice(0, lgth);
+      console.log(finalPassword);
+      return finalPassword;
    }
 
    // Generator functions
@@ -117,4 +110,5 @@ function generatePassword() {
       return symbols[Math.floor(Math.random() * symbols.length)];
    }
 
+   return newPassword;
 }
