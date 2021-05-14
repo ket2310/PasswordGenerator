@@ -45,17 +45,31 @@ function generatePassword() {
       THEN I choose lowercase, uppercase, numeric, and/or special characters
    */
 
-   const hasupper = confirm(criteria[0]);
-   const haslower = confirm(criteria[1]);
-   const hasnumber = confirm(criteria[2]);
-   const hassymbol = confirm(criteria[3]);
+   var makePassword = new Array();
+   for (var i = 0; i < criteria.length; i++) {
+      makePassword[i] = confirm(criteria[i]);
+   }
+
+   // const hasupper = confirm(criteria[0]);
+   // const haslower = confirm(criteria[1]);
+   // const hasnumber = confirm(criteria[2]);
+   // const hassymbol = confirm(criteria[3]);
 
    /*
     5 WHEN I answer each prompt
      THEN my input should be validated and at least one character type should be 
      selected
   */
-
+   for (var i = 0; i < makePassword.length; i++) {
+      if (!makePassword[i]) {
+         alert("You must choose at least one character type to generate your password.");
+         break;
+      }
+      else {
+         alert("Generating password.  Click Ok to see the result.")
+         break;
+      }
+   }
 
    const randomFunc = {
       lower: getRandomLower,
@@ -64,16 +78,19 @@ function generatePassword() {
       symbol: getRandomSymbol
    }
 
-   var newPassword = securePassword(pwLength, hasupper, haslower, hasnumber, hassymbol);
+   var newPassword =    securePassword(pwLength, makePassword) 
 
-   function securePassword(lgth, upper, lower, number, symbol) {
+
+   function securePassword(lgth, contents) {
       let generatedPassword = "";
 
-      const typesCount = upper + lower + number + symbol;
-      console.log("Upper type: " + typeof (upper))
-      console.log({ upper });
+      const typesCount = contents[0] + makePassword[1] + contents[2] + contents[3];
 
-      const arrayOfTypes = [{ upper }, { lower }, { number }, { symbol }].filter(item => Object.values(item)[0]);
+      const arrayOfTypes = [{"upper": contents[0]}, {"lower": contents[1]}, {"number": contents[2]},{"symbol": contents[3]}].filter
+      (
+         item => Object.values(item)[0]);
+      console.log("Count: = ", typesCount);
+      console.log("Array of types = ", arrayOfTypes);
 
 
       if (typesCount === 0)
